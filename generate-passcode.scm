@@ -1,5 +1,4 @@
-#!/home/kraai/.guix-profile/bin/guile \
--e main -s
+#!/usr/bin/env -S guile -e main -s
 !#
 
 (use-modules (gcrypt random))
