@@ -15,9 +15,12 @@
 	(secure-random n))))
 
 (define* (generate-passcode #:optional (length 6))
-  (format #t "~v,'0d\n" length (secure-random (expt 10 length))))
+  (format #f "~v,'0d" length (secure-random (expt 10 length))))
 
 (define (main args)
-  (match args
-    ((_) (generate-passcode))
-    ((_ n) (generate-passcode (string->number n)))))
+  (let ((passcode
+	 (match args
+	   ((_) (generate-passcode))
+	   ((_ n) (generate-passcode (string->number n))))))
+    (display passcode)
+    (newline)))
