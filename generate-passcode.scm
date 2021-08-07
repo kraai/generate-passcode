@@ -3,15 +3,26 @@
 !#
 
 (use-modules (gcrypt random))
+(use-modules (ice-9 format))
+(use-modules (ice-9 match))
 (use-modules (rnrs bytevectors))
 
-(define (generate-passcode)
-  (let ((number (modulo (bytevector-u32-ref (gen-random-bv 4) 0 (endianness little)) (expt 2 20))))
-    (if (<= number 999999)
-	(let ((digits (number->string number)))
-	  (string-append (make-string (- 6 (string-length digits)) #\0) digits))
-	(generate-passcode))))
+(define (secure-random n)
+  (let* ((bits (integer-length n))
+	 (bytes (ceiling-quotient bits 8))
+	 (result (modulo (bytevector-uint-ref (gen-random-bv bytes) 0 (native-endianness) bytes) (expt 2 bits))))
+    (if (< result n)
+	result
+	(secure-random n))))
+
+(define* (generate-passcode #:optional (length 6))
+  (format #f "~v,'0d" length (secure-random (expt 10 length))))
 
 (define (main args)
-  (display (generate-passcode))
-  (newline))
+  (match args
+    ((_)
+     (display (generate-passcode))
+     (newline))
+    ((_ n)
+     (display (generate-passcode (string->number n)))
+     (newline))))
