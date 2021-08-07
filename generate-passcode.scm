@@ -19,10 +19,10 @@
 ; License along with generate-passcode.  If not, see
 ; <https://www.gnu.org/licenses/>.
 
-(use-modules (gcrypt random))
-(use-modules (ice-9 format))
-(use-modules (ice-9 match))
-(use-modules (rnrs bytevectors))
+(use-modules (gcrypt random)
+	     (ice-9 format)
+	     (ice-9 match)
+	     (rnrs bytevectors))
 
 (define (secure-random n)
   "Return a secure number in [0, N).
